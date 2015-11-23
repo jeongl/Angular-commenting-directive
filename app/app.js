@@ -1,74 +1,51 @@
-var app = angular.module('noteApp', []);
+var app = angular.module('noteApp', ['commentsCollectionService', 'guidGeneratorService']);
 
-app.controller('commentsController', ['$scope', 'commentsCollection', function($scope, commentsCollection ){
+app.controller('commentsController',  ['$scope', 'commentsCollection', 'guidGenerator', function($scope, commentsCollection ){
 
   commentsCollection().then(function(result){
-    $scope.commentsCollection = result;
+    $scope.commentsCollection = result;    
   }).then(function(){
-
+    // console.log('1: ')
+  }).then(function(){
+    // console.log('2: ');
   });
 
 
 }]);
 
-app.directive('notepad', function(){
-    function changeColor(elem ){
-      if ( /blue/.test(elem.find('.two-thirds').attr('style'))  ){
-        elem.find('.two-thirds').css('color', 'red');
-      } else elem.find('.two-thirds').css('color', 'blue');
-      
-    }
-
-    return {
-      restrict: 'AE',
-      scope: {
-        comment: '=',
-        test: '='
-      },
-      link: function($scope, elem, attrs) {
-
-        console.log('$scope: ', $scope );
-
-        elem.find('.row').bind('click', function(a, b, c ){
-          $scope.$apply(function(){
-            $scope.show = 'true';  
-          });
-          changeColor( elem);
+app.directive('comments', function(){
+  return {
+    restrict: 'AE',
+    scope: {
+      comment: '=',
+      test: '='
+    },
+    link: function($scope, elem, attrs) {
+      elem.find('.row').bind('click', function(a, b, c ){
+        var newVal = $scope.show === 'false' ? 'true' : 'false'
+        $scope.$apply(function(){
+          $scope.show = newVal;
         });
+      });
 
-      },
-      templateUrl: 'templateurl.html'
-    }
+      elem.bind('mouseover', function(){
+        elem.css('cursor', 'pointer');
+      });
 
-});
+    },
 
-app.factory('commentsCollection', function($timeout, $q ){
-
-
-  return function asyncFetch(){
-    var deferred = $q.defer();
-
-    $timeout(function(){
-      deferred.resolve([
-        { 
-          id: '1',
-          name: 'John Doe',
-          text: 'Hello, this is my first comment',
-          dateCreated: 'Monday, November 23, 2015',
-          dateUpdated: 'Monday, November 24, 2015'
-        },
-        { 
-          id: '2',
-          name: 'Mary Doe',
-          text: 'Hello, this is my response',
-          dateCreated: 'Monday, November 23, 2015',
-          dateUpdated: 'Monday, November 24, 2015'
-        }
-      ]);
-
-    }, 0 )
-
-    return deferred.promise;
+    templateUrl: 'templateurl.html'
   }
 
+})
+.directive('replies', function() {
+  return {
+    scope: {},
+    restrict: 'AE',
+    require: '^comments',
+    link: function(scope, elem, attrs, controllerInstance) {
+      console.log('here: ');
+    },
+    template: '<h1>Hello, World</h1>'
+  };
 });
