@@ -1,75 +1,74 @@
 var app = angular.module('noteApp', []);
 
-app.directive('notepad', function(notesFactory) {
+app.controller('commentsController', ['$scope', 'commentsCollection', function($scope, commentsCollection ){
 
-  function test(){
-  }
+  commentsCollection().then(function(result){
+    $scope.commentsCollection = result;
+  }).then(function(){
 
-  return {
-    restrict: 'AE',
-    scope: {},
-    link: function(scope, elem, attrs) {
-      scope.openEditor = function(index){
-        scope.editMode = true;
-        if (index !== undefined) {
-          scope.noteText = notesFactory.get(index).content;
-          scope.index = index;
-        } else
-          scope.noteText = undefined;
-      };
-      scope.save = function() {
-        if (scope.noteText !== "" && scope.noteText !== undefined) {
-          var note = {};
-          note.title = scope.noteText.length > 10 ? scope.noteText.substring(0, 10) + '. . .' : scope.noteText;
-          note.content = scope.noteText;
-          note.id = scope.index != -1 ? scope.index : localStorage.length;
-          scope.notes = notesFactory.put(note);
-        }
-        scope.restore();
-      };
+  });
 
 
-      scope.restore = function() {
-        scope.editMode = false;
-        scope.index = -1;
-        scope.noteText = "";
-        test();
-      };
+}]);
 
-      var editor = elem.find('#editor');
+app.directive('notepad', function(){
+    function changeColor(elem ){
+      if ( /blue/.test(elem.find('.two-thirds').attr('style'))  ){
+        elem.find('.two-thirds').css('color', 'red');
+      } else elem.find('.two-thirds').css('color', 'blue');
+      
+    }
 
-      scope.restore();
+    return {
+      restrict: 'AE',
+      scope: {
+        comment: '=',
+        test: '='
+      },
+      link: function($scope, elem, attrs) {
 
-      scope.notes = notesFactory.getAll();
-      console.table(scope.notes );
+        console.log('$scope: ', $scope );
 
-      editor.bind('keyup keydown', function() {
-        scope.noteText = editor.text().trim();
-      });
+        elem.find('.row').bind('click', function(a, b, c ){
+          $scope.$apply(function(){
+            $scope.show = 'true';  
+          });
+          changeColor( elem);
+        });
 
-    },
-    templateUrl: 'templateurl.html'
-  };
+      },
+      templateUrl: 'templateurl.html'
+    }
+
 });
 
-app.factory('notesFactory', function() {
-  return {
-    put: function(note) {
-      localStorage.setItem('note' + note.id, JSON.stringify(note));
-      return this.getAll();
-    },
-    get: function(index) {
-      return JSON.parse(localStorage.getItem('note' + index));
-    },
-    getAll: function() {
-      var notes = [];
-      for (var i = 0; i < localStorage.length; i++) {
-        if (localStorage.key(i).indexOf('note') !== -1) {
-          var note = localStorage.getItem(localStorage.key(i));
-          notes.push(JSON.parse(note));
+app.factory('commentsCollection', function($timeout, $q ){
+
+
+  return function asyncFetch(){
+    var deferred = $q.defer();
+
+    $timeout(function(){
+      deferred.resolve([
+        { 
+          id: '1',
+          name: 'John Doe',
+          text: 'Hello, this is my first comment',
+          dateCreated: 'Monday, November 23, 2015',
+          dateUpdated: 'Monday, November 24, 2015'
+        },
+        { 
+          id: '2',
+          name: 'Mary Doe',
+          text: 'Hello, this is my response',
+          dateCreated: 'Monday, November 23, 2015',
+          dateUpdated: 'Monday, November 24, 2015'
         }
-      }
-      return notes;
-    }
-  };
+      ]);
+
+    }, 0 )
+
+    return deferred.promise;
+  }
+
 });

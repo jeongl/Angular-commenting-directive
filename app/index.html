@@ -11,54 +11,29 @@
   <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
   <link rel="stylesheet" href="normalize.css">
   <link rel="stylesheet" href="skeleton.css">
-  <script data-require="jquery@*" data-semver="2.0.3" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
-  <script data-require="angular.js@1.0.x" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js" data-semver="1.0.8"></script>
+  <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
   <script src="app.js"></script>
 </head>
 
-<body style="width: 50%; ">
-
-<!-- Standard buttons -->
-<a class="button" href="#">Anchor button</a>
-<button>Button element</button>
-<input type="submit" value="submit input">
-<input type="button" value="button input">
-
-<!-- Primary buttons -->
-<a class="button button-primary" href="#">Anchor button</a>
-<button class="button-primary">Button element</button>
-<input class="button-primary" type="submit" value="submit input">
-<input class="button-primary" type="button" value="button input">
+<body ng-controller="commentsController">
 
 
-<table class="u-half-width">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Age</th>
-      <th>Sex</th>
-      <th>Location</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Dave Gamache</td>
-      <td>26</td>
-      <td>Male</td>
-      <td>San Francisco</td>
-    </tr>
-    <tr>
-      <td>Dwayne Johnson</td>
-      <td>42</td>
-      <td>Male</td>
-      <td>Hayward</td>
-    </tr>
-  </tbody>
-</table>
+<div class="container">
+
+  <div ng-repeat="comment in commentsCollection" >
+    {{test}}
+    <notepad comment="comment" />    
+  </div>
 
 
-  <h1 class="title">The Note Making App</h1>
-  <notepad/>
+
+
+</div>
+
+
+  
+
 </body>
 
 </html>
