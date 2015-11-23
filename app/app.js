@@ -20,6 +20,8 @@ app.directive('comments', function(){
       comment: '=',
       test: '='
     },
+    transclude: true,
+    controller: function($scope){ },
     link: function($scope, elem, attrs) {
       elem.find('.row').bind('click', function(a, b, c ){
         var newVal = $scope.show === 'false' ? 'true' : 'false'
@@ -34,7 +36,7 @@ app.directive('comments', function(){
 
     },
 
-    templateUrl: 'templateurl.html'
+    templateUrl: 'templates/commentsTemplate.html'
   }
 
 })
@@ -43,9 +45,10 @@ app.directive('comments', function(){
     scope: {},
     restrict: 'AE',
     require: '^comments',
-    link: function(scope, elem, attrs, controllerInstance) {
-      console.log('here: ');
+    link: function($scope, elem, attrs, controllerInstance) {
+      console.log('$scope: ', $scope.$parent.$parent.reply );
+      $scope.reply = $scope.$parent.$parent.reply;
     },
-    template: '<h1>Hello, World</h1>'
+    templateUrl: 'templates/repliesTemplate.html'
   };
 });

@@ -15,12 +15,19 @@ app.factory('commentsCollection', function($timeout, $q, guidGenerator ){
           replies: [
             {
               id: guidGenerator(),
-              name: 'John Doe',
-              text: 'Hello, this is my first comment',
+              name: 'Frank Doe',
+              text: 'Hello, this is my first reply',
+              dateCreated: 'Monday, November 23, 2015',
+              dateUpdated: 'Monday, November 24, 2015',
+            },
+            {
+              id: guidGenerator(),
+              name: 'Charles Doe',
+              text: 'Hello, this is my second reply',
               dateCreated: 'Monday, November 23, 2015',
               dateUpdated: 'Monday, November 24, 2015',
 
-            }            
+            }                        
           ]
         },
         { 
