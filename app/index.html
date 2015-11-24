@@ -7,15 +7,17 @@
   <script>
     document.write('<base href="' + document.location + '" />');
   </script>
-  <link rel="stylesheet" href="style.css" />
   <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
   <link rel="stylesheet" href="normalize.css">
   <link rel="stylesheet" href="skeleton.css">
+  <link rel="stylesheet" href="style.css" />
   <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
   <script src="app.js"></script>
   <script src="factories/commentsCollection.js"></script>
   <script src="factories/util/guidGenerator.js"></script>
+  <script src="factories/util/domUtilityFns.js"></script>
 </head>
 
 <body ng-controller="commentsController">

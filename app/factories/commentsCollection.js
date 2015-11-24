@@ -33,13 +33,37 @@ app.factory('commentsCollection', function($timeout, $q, guidGenerator ){
         { 
           id: guidGenerator(),
           name: 'Mary Doe',
-          text: 'Hello, this is my response',
+          text: 'Hello, world - testing.',
           dateCreated: 'Monday, November 23, 2015',
           dateUpdated: 'Monday, November 24, 2015'
-        }
+        },
+        { 
+          id: guidGenerator(),
+          name: 'Jane Doe',
+          text: 'Hello, this is my other response',
+          dateCreated: 'Monday, November 23, 2015',
+          dateUpdated: 'Monday, November 24, 2015',
+          replies: [
+            {
+              id: guidGenerator(),
+              name: 'Mary',
+              text: 'I see your comment.',
+              dateCreated: 'Monday, November 23, 2015',
+              dateUpdated: 'Monday, November 24, 2015',
+            },
+            {
+              id: guidGenerator(),
+              name: 'Tim',
+              text: 'I as well.',
+              dateCreated: 'Monday, November 23, 2015',
+              dateUpdated: 'Monday, November 24, 2015',
+
+            }                        
+          ]          
+        }        
       ]);
 
-    }, 0 )
+    }, 1000 )
 
     return deferred.promise;
   }

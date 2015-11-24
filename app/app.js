@@ -1,37 +1,47 @@
-var app = angular.module('noteApp', ['commentsCollectionService', 'guidGeneratorService']);
+var app = angular.module('noteApp', ['commentsCollectionService', 'guidGeneratorService', 'domUtilityService' ]);
 
-app.controller('commentsController',  ['$scope', 'commentsCollection', 'guidGenerator', function($scope, commentsCollection ){
+app.controller('commentsController',  ['$scope', 'commentsCollection', 'guidGenerator', function($scope, commentsCollection, stringToggler ){
 
   commentsCollection().then(function(result){
-    $scope.commentsCollection = result;    
-  }).then(function(){
-    // console.log('1: ')
-  }).then(function(){
-    // console.log('2: ');
-  });
+    $scope.commentsCollection = window.commentsCollection = result;
 
+  }).then(function(){
+
+  }).then(function(){});
 
 }]);
 
-app.directive('comments', function(){
+app.directive('comments', function(stringToggler ){
   return {
     restrict: 'AE',
     scope: {
       comment: '=',
-      test: '='
+      test: '=',
+      commentsCollection: '='
     },
     transclude: true,
     controller: function($scope){ },
     link: function($scope, elem, attrs) {
-      elem.find('.row').bind('click', function(a, b, c ){
-        var newVal = $scope.show === 'false' ? 'true' : 'false'
-        $scope.$apply(function(){
-          $scope.show = newVal;
-        });
+
+      $scope.show = 'true';
+
+      elem.find('.editButton').bind('click', function(){
+        stringToggler($scope, 'show');
       });
 
-      elem.bind('mouseover', function(){
-        elem.css('cursor', 'pointer');
+      elem.find('.submitButton').bind('click', function(a,b,c){
+        $scope.comment.text = elem.parent().find('textarea').val();
+        stringToggler($scope, 'show');
+      });
+
+      elem.find('.deleteButton').bind('click', function(e){
+        var collection = $scope.$parent.$parent.commentsCollection;
+        $scope.$apply(function(){
+          $scope.$parent.$parent.commentsCollection =
+          _.without(collection, _.findWhere(collection,  {id: $scope.comment.id } ));
+        });
+        
+
       });
 
     },
@@ -39,16 +49,56 @@ app.directive('comments', function(){
     templateUrl: 'templates/commentsTemplate.html'
   }
 
-})
-.directive('replies', function() {
+});
+
+app.directive('replies', function(stringToggler ) {
   return {
     scope: {},
     restrict: 'AE',
     require: '^comments',
     link: function($scope, elem, attrs, controllerInstance) {
-      console.log('$scope: ', $scope.$parent.$parent.reply );
       $scope.reply = $scope.$parent.$parent.reply;
+      $scope.showReply = 'false';
+
+      elem.bind('mouseover', function(){
+        elem.css('cursor', 'pointer');
+        $scope.$apply(function(){
+          $scope.showEditTip = 'true';  
+        });
+      }).bind('mouseleave', function(){
+        $scope.$apply(function(){
+          $scope.showEditTip = 'false';
+        });        
+      })
+
+      elem.find('span').first().bind('click', function(){
+        stringToggler($scope, 'showReply' );
+      });
+
+      elem.find('.editButton').bind('click', function(){
+        $scope.$apply(function(){
+          $scope.reply.text = elem.parent().find('textarea').val();
+        });
+        stringToggler($scope, 'showReply' );
+      });
+
+      elem.find('.deleteButton').bind('click', function(){
+        $scope.$apply(function(){
+          delete $scope.reply;
+        });
+        elem.parents('.replies').hide()
+        stringToggler($scope, 'showReply' );
+      });
+
+
     },
+
     templateUrl: 'templates/repliesTemplate.html'
   };
 });
+
+
+
+
+
+
